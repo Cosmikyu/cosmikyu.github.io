@@ -1,21 +1,17 @@
 const express = require('express');
 const app = express();
-const { exec } = require('child_process');
+const WebSocket = require('ws');
+const wss = new WebSocket.Server({ port: 8080 });
 
 app.use(express.json());
 
 app.post('/command', (req, res) => {
-  exec(req.body.command, (error, stdout, stderr) => {
-    if (error) {
-      res.send(`error: ${error.message}`);
-      return;
-    }
-    if (stderr) {
-      res.send(`stderr: ${stderr}`);
-      return;
-    }
-    res.send(`stdout: ${stdout}`);
+  // Handle incoming messages from clients
+  const message = req.body.message;
+  wss.clients.forEach((client) => {
+    client.send(message);
   });
+  res.send(`Message sent: ${message}`);
 });
 
 app.listen(3000, () => console.log('Server running on port 3000'));
