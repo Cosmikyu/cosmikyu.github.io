@@ -8,7 +8,7 @@ function sendMessage() {
         return;
     }
 
-    fetch('http://localhost:3000/messages', {
+    fetch('http://https://uncommon-explicitly-bull.ngrok-free.app/messages', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -32,7 +32,7 @@ function displayMessage(message) {
 }
 
 function fetchMessages() {
-    fetch('http://localhost:3000/messages')
+    fetch('http://uncommon-explicitly-bull.ngrok-free.app/messages')
         .then(response => response.json())
         .then(data => {
             data.messages.forEach(displayMessage);
