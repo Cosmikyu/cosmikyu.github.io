@@ -8,7 +8,7 @@ function sendMessage() {
         return;
     }
 
-    fetch('https://https://uncommon-explicitly-bull.ngrok-free.app/messages', {
+    fetch('https://uncommon-explicitly-bull.ngrok-free.app/messages', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
