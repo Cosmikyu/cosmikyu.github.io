@@ -20,7 +20,10 @@ function sendMessage() {
         messageInput.value = '';
         fetchMessages(); // Fetch messages after sending a new one
     })
-    .catch(error => console.error('Error:', error));
+    .catch(error => {
+        console.error('Error:', error);
+        showError('The server is currently unavailable. Please try again later.');
+    });
 }
 
 function displayMessage(message) {
@@ -39,10 +42,22 @@ function fetchMessages() {
             messagesContainer.innerHTML = ''; // Clear existing messages
             data.messages.forEach(displayMessage);
         })
-        .catch(error => console.error('Error:', error));
+        .catch(error => {
+            console.error('Error:', error);
+            showError('The server is currently unavailable. Please try again later.');
+        });
 }
 
 // Fetch messages every 2 seconds
 setInterval(fetchMessages, 2000);
 
 fetchMessages(); // Initial fetch
+
+function showError(errorMessage) {
+    const messagesContainer = document.getElementById('messages');
+    messagesContainer.innerHTML = ''; // Clear existing messages
+    const errorElement = document.createElement('div');
+    errorElement.textContent = errorMessage;
+    errorElement.style.color = 'red';
+    messagesContainer.appendChild(errorElement);
+}
