@@ -17,7 +17,7 @@ function sendMessage() {
     })
     .then(response => {
         if (!response.ok) {
-            throw new Error('Network response was not ok');
+            return response.text().then(text => { throw new Error(text) });
         }
         return response.json();
     })
@@ -43,7 +43,7 @@ function fetchMessages() {
     fetch('https://uncommon-explicitly-bull.ngrok-free.app/api/messages')
         .then(response => {
             if (!response.ok) {
-                throw new Error('Network response was not ok');
+                return response.text().then(text => { throw new Error(text) });
             }
             return response.json();
         })
