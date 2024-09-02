@@ -15,7 +15,12 @@ function sendMessage() {
         },
         body: JSON.stringify({ message })
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
     .then(data => {
         messageInput.value = '';
         fetchMessages(); // Fetch messages after sending a new one
@@ -36,7 +41,12 @@ function displayMessage(message) {
 
 function fetchMessages() {
     fetch('https://uncommon-explicitly-bull.ngrok-free.app/api/messages')
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
             const messagesContainer = document.getElementById('messages');
             messagesContainer.innerHTML = ''; // Clear existing messages
