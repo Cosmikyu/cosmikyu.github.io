@@ -17,8 +17,8 @@ function sendMessage() {
     })
     .then(response => response.json())
     .then(data => {
-        displayMessage(data.message);
         messageInput.value = '';
+        fetchMessages(); // Fetch messages after sending a new one
     })
     .catch(error => console.error('Error:', error));
 }
@@ -35,9 +35,14 @@ function fetchMessages() {
     fetch('https://uncommon-explicitly-bull.ngrok-free.app/api/messages')
         .then(response => response.json())
         .then(data => {
+            const messagesContainer = document.getElementById('messages');
+            messagesContainer.innerHTML = ''; // Clear existing messages
             data.messages.forEach(displayMessage);
         })
         .catch(error => console.error('Error:', error));
 }
 
-fetchMessages();
+// Fetch messages every 2 seconds
+setInterval(fetchMessages, 2000);
+
+fetchMessages(); // Initial fetch
