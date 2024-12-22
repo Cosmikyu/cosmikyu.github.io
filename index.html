@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Tip</title>
+    <style>
+        /* General styling */
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #89f7fe, #66a6ff);
+            background-size: 400% 400%;
+            animation: gradientShift 10s ease infinite;
+            color: #ffffff;
+            overflow: hidden; /* Prevent overflow from confetti */
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Tip container styling */
+        .tip-container {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 600;
+            padding: 20px;
+            background: #ffffff; /* Solid white background */
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+            transition: transform 0.3s ease;
+            color: #333; /* Text color for better contrast */
+        }
+        .tip-container:hover {
+            transform: scale(1.05);
+        }
+
+        /* Hidden content styling */
+        .hidden {
+            display: none;
+        }
+
+        /* Animation container */
+        .animation {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #f2003c; /* Folly Red color */
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            display: flex;
+            gap: 10px;
+            z-index: 10; /* Ensure it appears above confetti */
+        }
+
+        /* Letter animation */
+        .letter {
+            opacity: 0;
+            transform: translateY(50px);
+            animation: slideIn 0.5s ease-in-out forwards;
+        }
+        .letter:nth-child(1) { animation-delay: 0s; }
+        .letter:nth-child(2) { animation-delay: 0.2s; }
+        .letter:nth-child(3) { animation-delay: 0.4s; }
+        .letter:nth-child(4) { animation-delay: 0.6s; }
+        .letter:nth-child(5) { animation-delay: 0.8s; }
+        .letter:nth-child(6) { animation-delay: 1s; }
+        .letter:nth-child(7) { animation-delay: 1.2s; }
+        .letter:nth-child(8) { animation-delay: 1.4s; }
+
+        /* Keyframe for letter animation */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Displaced letter styling */
+        .displaced {
+            color: #f2003c; /* Folly Red color */
+            cursor: pointer;
+            text-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
+        }
+        .displaced:hover {
+            transform: scale(1.2);
+            transition: transform 0.2s;
+        }
+
+        /* Responsiveness */
+        @media (max-width: 768px) {
+            .tip-container {
+                font-size: 1.5rem;
+            }
+            .animation {
+                font-size: 2.5rem;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@tsparticles/confetti@3.0.3/tsparticles.confetti.bundle.min.js"></script>
+</head>
+<body>
+    <div class="tip-container" id="tip-container">
+        Today’s Tip: <span id="tip"></span>
+    </div>
+    <div class="hidden" id="secret">
+        <div class="animation" id="animation"></div>
+    </div>
+
+    <script>
+        // Array of daily tips
+        const tips = [
+            "Stay positive and keep learning!",
+            "Remember to take breaks and recharge.",
+            "Challenge yourself to grow every day.",
+            "Small steps lead to big achievements.",
+            "Kindness is a superpower—use it often."
+        ];
+
+        // Function to get a random tip and add a displaced letter
+        function getRandomTip() {
+            const tip = tips[Math.floor(Math.random() * tips.length)];
+            const randomIndex = Math.floor(Math.random() * tip.length);
+            const displacedLetter = `<span class='displaced'>${tip[randomIndex]}</span>`;
+            return tip.slice(0, randomIndex) + displacedLetter + tip.slice(randomIndex + 1);
+        }
+
+        // Display the tip with a displaced letter
+        document.getElementById('tip').innerHTML = getRandomTip();
+
+        // Add click event to displaced letter dynamically
+        document.getElementById('tip-container').addEventListener('click', function (event) {
+            if (event.target.classList.contains('displaced')) {
+                document.getElementById('tip-container').classList.add('hidden');
+                document.getElementById('secret').classList.remove('hidden');
+                displayAnimation("I Love You!");
+            }
+        });
+
+        // Function to display the animation
+        function displayAnimation(message) {
+            const animationContainer = document.getElementById('animation');
+            animationContainer.innerHTML = ""; // Clear previous content
+
+            message.split('').forEach((char, index) => {
+                const span = document.createElement('span');
+                span.textContent = char;
+                span.className = 'letter';
+                span.style.animationDelay = `${index * 0.2}s`;
+                animationContainer.appendChild(span);
+            });
+
+            setTimeout(() => {
+                launchConfetti();
+            }, message.length * 200 + 500); // Trigger confetti after animation
+        }
+
+        // Launch confetti with tsParticles
+        function launchConfetti() {
+            tsParticles.load("tsparticles", {
+                emitters: [
+                    {
+                        position: { x: 0, y: 100 },
+                        rate: { quantity: 10, delay: 0.2 },
+                        particles: {
+                            move: { direction: "top-right", outMode: "destroy", speed: 5 },
+                            size: { value: { min: 4, max: 10 } },
+                            color: { value: ["#f2003c", "#fad0c4", "#ffecd2", "#66a6ff"] },
+                            shape: { type: "circle" }
+                        }
+                    },
+                    {
+                        position: { x: 100, y: 100 },
+                        rate: { quantity: 10, delay: 0.2 },
+                        particles: {
+                            move: { direction: "top-left", outMode: "destroy", speed: 5 },
+                            size: { value: { min: 4, max: 10 } },
+                            color: { value: ["#f2003c", "#fad0c4", "#ffecd2", "#66a6ff"] },
+                            shape: { type: "circle" }
+                        }
+                    }
+                ]
+            });
+        }
+    </script>
+</body>
+</html>
